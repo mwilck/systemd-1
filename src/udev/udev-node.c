@@ -173,7 +173,9 @@ static int link_find_prioritized(sd_device *dev, bool add, const char *stackdir,
                 if (device_get_devlink_priority(dev_db, &db_prio) < 0)
                         continue;
 
-                if (target && db_prio <= priority)
+                if (target && (db_prio < priority ||
+                               (db_prio == priority &&
+                                strcmp(dent->d_name, target) >= 0)))
                         continue;
 
                 log_device_debug(dev_db, "Device claims priority %i for '%s'", db_prio, stackdir);
